@@ -10,7 +10,13 @@
   "license": "GPL-3.0-or-later",
   "description": "",
   "devDependencies": {
+    "@eslint/js": "^9.24.0",
     "@types/node": "^22.14.0",
-    "typescript": "^5.8.3"
+    "eslint": "^9.24.0",
+    "eslint-config-prettier": "^10.1.2",
+    "eslint-plugin-prettier": "^5.2.6",
+    "jiti": "^2.4.2",
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.29.1"
   }
 }
