@@ -8,10 +8,14 @@
     "skipLibCheck": true,
     "outDir": "dist",
     "types": [
-      "node"
+      "node",
+      "jest"
     ]
   },
   "include": [
     "src/"
+  ],
+  "exclude": [
+    "**/*.test.ts"
   ]
 }
