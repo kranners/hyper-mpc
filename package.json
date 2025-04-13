@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "keywords": [],
   "author": "",
@@ -11,11 +11,14 @@
   "description": "",
   "devDependencies": {
     "@eslint/js": "^9.24.0",
+    "@types/jest": "^29.5.14",
     "@types/node": "^22.14.0",
     "eslint": "^9.24.0",
     "eslint-config-prettier": "^10.1.2",
     "eslint-plugin-prettier": "^5.2.6",
+    "jest": "^29.7.0",
     "jiti": "^2.4.2",
+    "ts-jest": "^29.3.1",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.29.1"
   },
