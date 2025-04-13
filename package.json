@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "start": "node ./dist/index.js",
+    "inspect": "mcp-inspector node ./dist/index.js"
   },
   "keywords": [],
   "author": "",
@@ -11,6 +13,7 @@
   "description": "",
   "devDependencies": {
     "@eslint/js": "^9.24.0",
+    "@modelcontextprotocol/inspector": "^0.8.2",
     "@types/jest": "^29.5.14",
     "@types/node": "^22.14.0",
     "eslint": "^9.24.0",
