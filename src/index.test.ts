@@ -8,7 +8,10 @@ let client: Client;
 beforeAll(async () => {
   transport = new StdioClientTransport({
     command: "node",
-    args: [join(__dirname, "..", "dist", "index.js")],
+    args: [
+      join(__dirname, "..", "dist", "index.js"),
+      join(__dirname, "..", "sample.hyper.mcp.json"),
+    ],
   });
 
   client = new Client({

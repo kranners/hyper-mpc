@@ -1,5 +1,7 @@
 import { readFileSync } from "fs";
 import { z } from "zod";
+import { join } from "path";
+import { homedir } from "os";
 
 const McpStdioEntry = z.object({
   command: z.string(),
@@ -14,10 +16,27 @@ const McpSseEntry = z.object({
 
 const McpServerEntry = z.union([McpStdioEntry, McpSseEntry]);
 
-const McpConfig = z.record(z.string(), McpServerEntry);
+const McpConfig = z.object({
+  mcpServers: z.record(z.string(), McpServerEntry),
+});
+
 export type McpConfig = z.infer<typeof McpConfig>;
 
 export const loadConfig = (configPath: string): McpConfig => {
   const configContents = JSON.parse(readFileSync(configPath).toString());
   return McpConfig.parse(configContents);
+};
+
+export const DEFAULT_CONFIG_PATH = join(homedir(), ".cursor", "hyper.mcp.json");
+
+export type GetConfigPathInput = {
+  env: NodeJS.ProcessEnv;
+  argv: string[];
+};
+
+export const getConfigPath = ({ env, argv }: GetConfigPathInput): string => {
+  const { CONFIG_PATH } = env;
+  const [configPathArgument] = argv.slice(2);
+
+  return configPathArgument ?? CONFIG_PATH ?? DEFAULT_CONFIG_PATH;
 };
