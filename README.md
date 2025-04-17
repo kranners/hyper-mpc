@@ -49,6 +49,10 @@ Need to:
 - [ ] Forward them through to the respective MCP server
 - [ ] Forward the results back
 
+### Support
+- [ ] Update transport command to support Nix, etc
+- [ ] Update connections to pass through MCP host environment (is this needed?) 
+
 ### Spice
 - [ ] CI & releases
 - [ ] Support SSE servers

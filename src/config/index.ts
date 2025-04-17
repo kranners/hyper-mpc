@@ -16,6 +16,8 @@ const McpSseEntry = z.object({
 
 const McpServerEntry = z.union([McpStdioEntry, McpSseEntry]);
 
+export type McpServerEntry = z.infer<typeof McpServerEntry>;
+
 const McpConfig = z.object({
   mcpServers: z.record(z.string(), McpServerEntry),
 });
