@@ -7,11 +7,22 @@ import { McpConfig } from "../config";
 const MOCK_TOOL = { name: "test_tool", description: "A test tool" };
 
 jest.mock("@modelcontextprotocol/sdk/client/index.js", () => ({
-  Client: jest.fn().mockImplementation(() => ({
-    connect: jest.fn(),
-    listTools: jest.fn().mockResolvedValue([MOCK_TOOL]),
-  })),
+  Client: jest.fn().mockImplementation(({ name }: { name: string }) => {
+    if (name === "hyper-mcp-failing-server") {
+      return {
+        connect: jest.fn().mockRejectedValue(new Error("Connection failed")),
+        listTools: jest.fn(),
+      };
+    }
+
+    return {
+      connect: jest.fn().mockResolvedValue(undefined),
+      listTools: jest.fn().mockResolvedValue([MOCK_TOOL]),
+    };
+  }),
 }));
+
+const consoleErrorSpy = jest.spyOn(console, "error").mockImplementation();
 
 jest.mock("@modelcontextprotocol/sdk/client/stdio.js", () => ({
   StdioClientTransport: jest.fn(),
@@ -38,12 +49,12 @@ describe("createConnections", () => {
     expect(StdioClientTransport).toHaveBeenCalledWith({
       command: "test-command",
       args: ["arg1", "arg2"],
-      env: { TEST_ENV: "value" },
+      env: expect.objectContaining({ TEST_ENV: "value" }),
     });
 
     expect(Client).toHaveBeenCalledWith(
       expect.objectContaining({
-        name: "hyper-mpc",
+        name: "hyper-mcp-stdio-server",
         version: "0.0.0",
       }),
     );
@@ -58,7 +69,6 @@ describe("createConnections", () => {
       mcpServers: {
         "sse-server": {
           url: "https://test-sse-url.com",
-          env: { TEST_ENV: "value" },
         },
       },
     };
@@ -67,11 +77,10 @@ describe("createConnections", () => {
 
     expect(SSEClientTransport).toHaveBeenCalledWith(
       new URL("https://test-sse-url.com"),
-      { TEST_ENV: "value" },
     );
     expect(Client).toHaveBeenCalledWith(
       expect.objectContaining({
-        name: "hyper-mpc",
+        name: "hyper-mcp-sse-server",
         version: "0.0.0",
       }),
     );
@@ -86,10 +95,10 @@ describe("createConnections", () => {
         "stdio-server": {
           command: "test-command",
           args: ["arg1", "arg2"],
+          env: { TEST_ENV: "value" },
         },
         "sse-server": {
           url: "https://test-sse-url.com",
-          env: { TEST_ENV: "value" },
         },
       },
     };
@@ -105,5 +114,32 @@ describe("createConnections", () => {
     const names = connections.map((connection) => connection.name);
     expect(names).toContain("stdio-server");
     expect(names).toContain("sse-server");
+  });
+
+  it("filters out connections that fail to load", async () => {
+    const mockConfig: McpConfig = {
+      mcpServers: {
+        "working-server": {
+          command: "working-command",
+          args: [],
+        },
+        "failing-server": {
+          command: "failing-command",
+          args: [],
+        },
+      },
+    };
+
+    const connections = await createConnections(mockConfig);
+
+    // Should only have one working connection
+    expect(connections).toHaveLength(1);
+    expect(connections[0].name).toBe("working-server");
+
+    // Verify console.error was called with the right message
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      "Failed to load failing-server",
+      expect.any(Error),
+    );
   });
 });

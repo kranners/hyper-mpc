@@ -6,12 +6,19 @@ import { McpConfig, type McpServerEntry } from "../config";
 type Transport = StdioClientTransport | SSEClientTransport;
 
 const createClientTransport = (entry: McpServerEntry): Transport => {
+  const env = {
+    ...(process.env as Record<string, string>),
+    ...entry.env,
+  };
+
   if ("url" in entry) {
-    // NOTE: entry.env is sus here
-    return new SSEClientTransport(new URL(entry.url), entry.env);
+    return new SSEClientTransport(new URL(entry.url));
   }
 
-  return new StdioClientTransport(entry);
+  return new StdioClientTransport({
+    ...entry,
+    env,
+  });
 };
 
 export type Connection = {
@@ -28,31 +35,38 @@ type ConnectionInput = {
 const createConnection = async ({
   name,
   entry,
-}: ConnectionInput): Promise<Connection> => {
-  const transport = createClientTransport(entry);
+}: ConnectionInput): Promise<Connection | undefined> => {
+  try {
+    const transport = createClientTransport(entry);
 
-  const client = new Client({
-    name: `hyper-mpc`,
-    version: "0.0.0",
-  });
+    const client = new Client({
+      name: `hyper-mcp-${name}`,
+      version: "0.0.0",
+    });
 
-  await client.connect(transport);
-  const tools = await client.listTools();
+    await client.connect(transport);
 
-  return {
-    name,
-    client,
-    tools,
-  };
+    const tools = await client.listTools();
+
+    return {
+      name,
+      client,
+      tools,
+    };
+  } catch (e) {
+    console.error(`Failed to load ${name}`, e);
+    return;
+  }
 };
 
 export const createConnections = async (
   config: McpConfig,
 ): Promise<Connection[]> => {
   const mcpServerEntries = Object.entries(config.mcpServers);
-  const connections = mcpServerEntries.map(([name, entry]) =>
+  const connectionPromises = mcpServerEntries.map(([name, entry]) =>
     createConnection({ name, entry }),
   );
 
-  return Promise.all(connections);
+  const connections = await Promise.all(connectionPromises);
+  return connections.filter((connection) => connection !== undefined);
 };

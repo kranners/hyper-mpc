@@ -1,11 +1,12 @@
 {
-  "name": "hyper-mpc",
+  "name": "hyper-mcp",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
     "test": "tsc && jest",
-    "start": "node ./dist/index.js",
-    "inspect": "mcp-inspector node ./dist/index.js"
+    "start": "tsc && node ./dist/index.js",
+    "inspect": "mcp-inspector node ./dist/index.js",
+    "watch": "tsc --watch"
   },
   "keywords": [],
   "author": "",

@@ -11,7 +11,7 @@ const McpStdioEntry = z.object({
 
 const McpSseEntry = z.object({
   url: z.string(),
-  env: z.record(z.string(), z.string()),
+  env: z.record(z.string(), z.string()).optional(),
 });
 
 const McpServerEntry = z.union([McpStdioEntry, McpSseEntry]);
