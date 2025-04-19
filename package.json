@@ -6,7 +6,8 @@
     "test": "tsc && jest",
     "start": "node --watch ./dist/index.js",
     "inspect": "mcp-inspector node ./dist/index.js",
-    "watch": "tsc --watch"
+    "watch": "tsc --watch",
+    "lint": "eslint"
   },
   "keywords": [],
   "author": "",

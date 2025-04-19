@@ -39,19 +39,20 @@ Need to:
 - [x] Validate it's in the correct format (zod schema)
 
 ### Startup
-- [ ] Load a new client for each MCP entry
-- [ ] List all tools
-- [ ] Add all those to a register
+- [x] Load a new client for each MCP entry
+- [x] List all tools
+- [x] Add all those to a register
 
 ### Runtime
-- [ ] Expose that list via the tools endpoint
-- [ ] Take in commands
-- [ ] Forward them through to the respective MCP server
-- [ ] Forward the results back
+- [x] Expose that list via the tools endpoint
+- [x] Take in commands
+- [x] Forward them through to the respective MCP server
+- [x] Forward the results back
 
 ### Support
 - [ ] Update transport command to support Nix, etc
 - [ ] Update connections to pass through MCP host environment (is this needed?) 
+- [ ] Update tools to support dynamic tools, eg changing
 
 ### Spice
 - [ ] CI & releases
