@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "test": "tsc && jest",
-    "start": "tsc && node ./dist/index.js",
+    "start": "node --watch ./dist/index.js",
     "inspect": "mcp-inspector node ./dist/index.js",
     "watch": "tsc --watch"
   },
