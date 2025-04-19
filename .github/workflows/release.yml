@@ -3,6 +3,7 @@ name: Test & release to NPM
 on:
   release:
     types: [created]
+  push:
 
 permissions:
   contents: read
@@ -17,22 +18,22 @@ jobs:
         with:
           node-version: 22
           cache: "npm"
-          registry-url: "https://registry.npmjs.org"
       - run: npm install
       - run: npm test
 
   release:
     needs: test
     runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: "npm"
-          registry-url: "https://registry.npmjs.org"
       - run: npm ci
+      - run: npm run compile
       - run: npm publish
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
