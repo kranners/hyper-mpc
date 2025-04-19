@@ -1,9 +1,16 @@
 # hyper-mcp
 
-A configurable MCP server wrapper for using the entire Model Context Protocol
-without a tool count limit in Cursor.
+A MCP server wrapper for using the entire Model Context Protocol without tool
+limits or missing concepts.
+
+[See the Model Context Protocol documentation](https://modelcontextprotocol.io/clients) to see what your MCP client of choice is lacking.
+
+> [!WARNING]
+> This tool is actively being developed, and currently only supports static tools.
 
 ## Installation
+
+Example installation will be assuming you're using Cursor.
 
 1. Start by making a backup of your current `mcp.json` file.
 > [!TIP]
