@@ -25,12 +25,8 @@ Example installation will be assuming you're using Cursor.
     "hyper": {
       "command": "npx",
       "args": [
-        "@cute-engineer/hyper-mcp",
-        "/path/to/hyper.mcp.json"
+        "hyper-mcp",
       ],
-      "env": {
-        "CONFIG_PATH": "/path/to/hyper.mcp.json",
-      }
     }
   }
 }
